@@ -1,4 +1,5 @@
 import React from 'react';
+import './App.css';
 
 const schedule = {
   "title": "CS Courses for 2018-2019",
@@ -33,8 +34,8 @@ const Banner = ({ title }) => (
 
 //iteration
 const CourseList = ({ courses }) => (
-  <div>
-  { Object.values(courses).map(course => <Course key={course.id} course={ course } />) }
+  <div className='course_list' >
+    { Object.values(courses).map(course => <Course key={course.id} course={ course } />) }
   </div>
 );
 
@@ -50,13 +51,21 @@ const getCourseNumber = course => (
 
 //({}) since we send a object here
 const Course = ({ course }) => (
-  <div>
-    { getCourseTerm(course) } CS { getCourseNumber(course) }: { course.title }
+  <div className='card m-2 p-2'>
+    <div className='card_body'>
+      <div className='card_title'>
+        {getCourseTerm(course)} CS {getCourseNumber(course)}
+      </div>
+      <div className='card_text'>
+            {course.title}
+      </div>
+    </div>
+
   </div>
 );
 
 const App = () =>  (
-  <div>
+  <div className='container'>
     <Banner title={ schedule.title } />
     <CourseList courses={ schedule.courses } />
   </div>
