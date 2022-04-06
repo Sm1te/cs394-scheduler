@@ -1,0 +1,9 @@
+{
+    "book-sales" :{
+        "Title": "Modern Chinese 1A",
+        "Class": "Chinese 111",
+        "Seller-name" : "Sydney Smith",
+        "Seller-phone" : "978 727 4528",
+        "Price" : "30"
+    }
+}

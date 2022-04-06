@@ -8,12 +8,21 @@ const Banner = ({ title }) => (
 );
 
 //iteration
-const CourseList = ({ courses }) => (
-  <div className='course_list' >
-    { Object.values(courses).map(course => <Course key={course.id} course={ course } />) }
-  </div>
-);
+const CourseList = ({ courses }) => {
+  const [term, setTerm] = useState('Fall');
+  const termCourses = Object.values(courses).filter(course => term === getCourseTerm(course));
 
+  return (
+    <>
+    <TermSelector term = {term} setTerm = {setTerm} />
+      <div className='course_list' >
+      { termCourses.map(course => <Course key={course.id} course={ course } />) }
+      </div>
+    </>
+  );
+  
+};
+ 
 const terms = { F: 'Fall', W: 'Winter', S: 'Spring'};
 
 const getCourseTerm = course => (
@@ -23,6 +32,22 @@ const getCourseTerm = course => (
 const getCourseNumber = course => (
   course.id.slice(1, 4)
 );
+
+const TermButton = ({term, setTerm, checked}) =>(
+  <>
+    <input type= "radio" id={term} className = "btn-check" autoComplete='off' checked = {checked} onChange={() => setTerm(term)} />
+    <label class = "btn btn-success m-1 p-2" htmlFor = {term}>
+      {term}
+    </label>
+  </>
+);
+
+
+const TermSelector = ({term, setTerm}) => (
+  <div className='btn-group'>
+    {Object.values(terms).map(value => (<TermButton key={value} term = {value} checked = {value === term} setTerm = {setTerm}/> ))}
+  </div>
+)
 
 //({}) since we send a object here
 const Course = ({ course }) => (
