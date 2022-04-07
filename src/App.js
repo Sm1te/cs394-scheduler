@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
-import CourseList from './components/CourseList';
+import {CourseList} from './components/CourseList';
 import { addScheduleTimes} from './utilities/time';
 import { useData } from './utilities/firebase';
 
