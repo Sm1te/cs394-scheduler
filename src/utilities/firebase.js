@@ -3,6 +3,27 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase, onValue, ref, set } from 'firebase/database';
 import React, {useState, useEffect} from 'react';
+import { getAuth, GoogleAuthProvider, onIdTokenChanged, signInWithPopup, signOut } from 'firebase/auth';
+
+
+export const signInWithGoogle = () => {
+    signInWithPopup(getAuth(firebase), new GoogleAuthProvider());
+  };
+
+const firebaseSignOut = () => signOut(getAuth(firebase));
+
+export { firebaseSignOut as signOut };
+
+
+export const useUserState = () => {
+    const [user, setUser] = useState();
+  
+    useEffect(() => {
+      onIdTokenChanged(getAuth(firebase), setUser);
+    }, []);
+  
+    return [user];
+  }; 
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries

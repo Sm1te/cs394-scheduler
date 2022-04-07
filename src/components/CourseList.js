@@ -1,6 +1,6 @@
 import {hasConflict, timeParts } from "../utilities/time";
 import React, {useState, useEffect} from 'react';
-import { setData } from "../utilities/firebase";
+import { setData,signInWithGoogle, useUserState,signOut } from "../utilities/firebase";
 
 const terms = { F: 'Fall', W: 'Winter', S: 'Spring'}; 
 
@@ -8,6 +8,7 @@ const terms = { F: 'Fall', W: 'Winter', S: 'Spring'};
 const Course = ({ course, selected, setSelected }) => {
     const isSelected = selected.includes(course);
     const isDisabled = !isSelected && hasConflict(course, selected);
+    const [user] = useUserState();
     const style = {
       backgroundColor: isDisabled? 'lightgrey' : isSelected ? 'lightgreen' : 'white'
     };
@@ -16,7 +17,7 @@ const Course = ({ course, selected, setSelected }) => {
     <div className="card m-1 p-2" 
           style={style}
           onClick={isDisabled ? null : () =>  setSelected(toggle(course, selected))}
-          onDoubleClick={() => reschedule(course, getCourseMeetingData(course))}
+          onDoubleClick={!user ? null : () => reschedule(course, getCourseMeetingData(course))}
     >
     <div className="card-body">
           <div className="card-title">{ getCourseTerm(course) } CS { getCourseNumber(course) }</div>
@@ -97,9 +98,33 @@ export const getCourseTerm = course => (
     terms[course.id.charAt(0)]
 );
 
-const TermSelector = ({term, setTerm}) => (
-    <div className='btn-group'>
-        {Object.values(terms).map(value => (<TermButton key={value} term = {value} checked = {value === term} setTerm = {setTerm}/> ))}
-    </div>
-)
+const SignInButton = ()=>(
+    <button className="btn btn-secondary btn-sm"
+        onClick={()=>signInWithGoogle()}>
+            Sign In
+    </button>
+);
+
+const SignOutButton = () => (
+    <button className="btn btn-secondary btn-sm"
+        onClick={() => signOut()}>
+      Sign Out
+    </button>
+);
+
+const TermSelector = ({term, setTerm}) => {
+    const [user] = useUserState();
+    return (
+      <div className="btn-toolbar justify-content-between">
+        <div className="btn-group">
+        { 
+          Object.values(terms).map(
+            value => <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />
+          )
+        }
+        </div>
+        { user ? <SignOutButton /> : <SignInButton /> }
+      </div>
+    );
+  };
   
